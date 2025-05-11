@@ -1,0 +1,116 @@
+# Приложение для анализа банковских операций
+
+## Описание
+Этот проект предназначен для анализа банковских транзакций, формирования отчетов, расчёта кешбэка по категориям, получения курсов валют и стоимости акций.
+В проекте реализованы функции для фильтрации транзакций, составления топа трат, анализа выгодности кешбэка и сохранения результатов в текстовые файлы.
+
+## Структура проекта
+~~~
+.
+├── src
+│ ├── __init__.py
+│ ├── utils.py
+│ ├── main.py
+│ ├── views.py
+│ ├── reports.py
+│ └── services.py
+├── data
+│ ├── operations.xlsx
+├── results
+│ ├── result_reports.txt
+├── tests
+│ ├── __init__.py
+│ ├── test_utils.py
+│ ├── conftest.py
+│ ├── test_reports.py
+│ └── test_services.py
+├── user_settings.json
+├── .venv/
+├── .env
+├── .env_template
+├── .git/
+├── .idea/
+├── .flake8
+├── .gitignore
+├── pyproject.toml
+├── poetry.lock
+└── README.md
+~~~
+## Основные функции
+1. main_info(date_time: str) -> str
+Формирует JSON-ответ с приветствием, аналитикой по картам, топ-5 транзакциями, курсами валют и стоимостью акций на заданную дату.
+
+2. analyze_cashback_categories(file_path: str, year: int, month: int) -> str
+Анализирует выгоду по категориям повышенного кешбэка за выбранный месяц и год, возвращает результат в формате JSON.
+
+3. expenses_by_category(transactions: pd.DataFrame, category: str, date: Optional[str]) -> pd.DataFrame
+Возвращает траты по заданной категории за последние 3 месяца от переданной даты.
+
+Результат автоматически сохраняется в файл results/result_reports.txt с помощью декоратора.
+
+4. get_data_from_file(path_to_file: str) -> pd.DataFrame
+Загружает Excel-файл с транзакциями и возвращает pandas DataFrame.
+
+## Как использовать
+Для установки и запуска проекта необходимо выполнить следующие шаги:
+
+1.  **Клонируйте репозиторий:**
+
+    ```
+    git clone git@github.com:KonstantinZkv/PythonProject1.git
+    ```
+
+2.  **Перейдите в папку проекта:**
+
+    ```
+    cd PythonProject1
+    ```
+
+3.  **Установите зависимости с помощью Poetry:**
+
+    ```
+    poetry install
+    poetry add --group lint flake8
+    poetry add --group lint mypy
+    poetry add --group lint black
+    poetry add --group lint isort
+    poetry add --group dev pytest
+    poetry add python-dotenv
+    poetry add pandas
+    poetry add openpyxl
+    
+    ```
+
+## Использование функций в коде
+~~~
+from src.reports import main_info, analyze_cashback_categories, get_data_from_file, expenses_by_category
+
+# Получить общий отчет
+print(main_info("2021-12-15 15:30:00"))
+
+# Анализ кешбэка за март 2018
+print(analyze_cashback_categories("transactions.xlsx", 2018, 3))
+
+# Получить траты по категории "Аптеки"
+df = get_data_from_file("transactions.xlsx")
+result = expenses_by_category(df, "Аптеки", "2019-04-01")
+print(result)
+~~~
+## Результаты
+Все отчёты и выгрузки сохраняются в папке results/ в корне проекта.
+
+## Тестирование
+Для запуска тестов используйте команду: `pytest`
+
+Для проверки покрытия кода тестами используйте команду: `pytest --cov`
+
+
+## Зависимости
+
+Зависимости проекта управляются через Poetry. Они перечислены в файле pyproject.toml
+
+## Примечания
+1. Для корректной работы функции анализа кешбэка в Excel-файле должны быть столбцы:
+Дата операции, Категория, Сумма платежа, Кэшбэк.
+
+2. Все функции логируют свои действия через стандартный модуль logging.

@@ -2,7 +2,7 @@ import json
 
 from config import PATH_TO_EXCEL, PATH_TO_JSON
 
-from .utils import (get_card_with_spend, get_currency, get_data_time, get_path_and_period, get_stock,
+from utils import (get_card_with_spend, get_currency, get_data_time, get_path_and_period, get_stock,
                     get_time_for_greeting, get_top_transactions)
 
 
